@@ -316,7 +316,7 @@ class Model(nn.Module):
 
         sequence_output = encoded_layers[-1]
         pooled_output = self.pooler(sequence_output)
-        return sequence_output, pooled_output
+        return (sequence_output, pooled_output) + tuple(encoded_layers[:-1])
 
 
 class PreTraining(nn.Module):
@@ -365,15 +365,36 @@ class QuestionAnswering(nn.Module):
         super(QuestionAnswering, self).__init__()
         self.bert = Model(config)
         # TODO check with Google if it's normal there is no dropout on the token classifier of SQuAD in the TF version
-        # self.dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.qa_outputs = Linear(config.hidden_size, 2)
+        self.start_outputs = nn.Linear(config.hidden_size, 1)
+        self.end_pooler = nn.Linear(1 + config.hidden_size, 512)
+        self.end_outputs = nn.Linear(512, 1)
 
     def forward(self, input_ids, token_type_ids=None, attention_mask=None, start_positions=None, end_positions=None):
-        sequence_output, _ = self.bert(input_ids, token_type_ids, attention_mask)
-        logits = self.qa_outputs(sequence_output)
-        start_logits, end_logits = logits.split(1, dim=-1)
+        outputs = self.bert(input_ids, token_type_ids, attention_mask)
+
+        sequence_output = outputs[0]
+
+        answer_mask = attention_mask * token_type_ids
+        answer_mask = answer_mask.to(dtype=next(self.parameters()).dtype)  # fp16 compatibility
+        # batch, seq
+        device = input_ids.device
+        one_tensor = torch.ones((answer_mask.size(0), 1), device=device).to(
+            dtype=next(self.parameters()).dtype)  # fp16 compatibility
+        answer_mask = torch.cat([one_tensor, answer_mask[:, 1:]], dim=-1)
+
+        start_logits = self.start_outputs(sequence_output)
+        start_logits = start_logits.squeeze(-1)
+        start_logits += 1000.0 * (answer_mask - 1)
+        # batch, seq
+        start_logits = start_logits.unsqueeze(-1)
+
+        final_repr = gelu(self.end_pooler(torch.cat([start_logits, sequence_output], dim=-1)))
+        end_logits = self.end_outputs(final_repr)
+
         start_logits = start_logits.squeeze(-1)
         end_logits = end_logits.squeeze(-1)
+
+        end_logits += 1000.0 * (answer_mask - 1)
 
         if start_positions is not None and end_positions is not None:
             # If we are on multi-GPU, split add a dimension
