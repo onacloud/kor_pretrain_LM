@@ -100,10 +100,8 @@ Fine-Tuning Model도 공개합니다.
     * 5.6.4 Answer Dependency. Recent studies separately use H to predict the start and end
 spans for the answer, neglecting the dependency of the start and end representations.
 We model the dependency between start and end logits by concatenating the start logits
-and H through a linear layer to obtain the end logits: 
+and H through a linear layer to obtain the end logits where [; ] denotes concatenation: 
 <p align="center"><img src="./img/linear.png" width=200px></p>
-<p>where [; ] denotes concatenation.</p>
-
 
 ## Example Scripts
 **KorQuAD1.0**
