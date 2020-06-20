@@ -101,8 +101,8 @@ Fine-Tuning Model도 공개합니다.
 spans for the answer, neglecting the dependency of the start and end representations.
 We model the dependency between start and end logits by concatenating the start logits
 and H through a linear layer to obtain the end logits: 
-<p align="center"><img src="./img/enai_logo.png"></p>
-where [; ] denotes concatenation.
+<p align="center"><img src="./img/linear.png">where [; ] denotes concatenation.</p>
+
 
 ## Example Scripts
 **KorQuAD1.0**
