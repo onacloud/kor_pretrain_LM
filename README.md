@@ -100,7 +100,7 @@ Fine-Tuning Model도 공개합니다.
     * Dev set score: 78.68/88.59 (EM/F1) 
     * Test set score: 77.30/87.45 (EM/F1)
   * 답변의 start과 end사이에 의존관계가 있다는 아이디어를 이용하여 입력문자열에 의해 생성된 start와 마지막 히든 상태 H을 concatenating 시켜 end를 예측 하게 하였습니다. 아래 단락에는 저희가 참조한 논문의 링크와 소스코드의 링크를 첨부합니다.
-    * [Machine Reading Comprehension: The Role of Contextualized Language Models and Beyond](https://arxiv.org/pdf/2005.06249.pdf) [GitHub](https://github.com/cooelf/AwesomeMRC)
+    * [Machine Reading Comprehension: The Role of Contextualized Language Models and Beyond](https://arxiv.org/pdf/2005.06249.pdf) ([GitHub](https://github.com/cooelf/AwesomeMRC))
     * 5.6.4 Answer Dependency. Recent studies separately use H to predict the start and end
 spans for the answer, neglecting the dependency of the start and end representations.
 We model the dependency between start and end logits by concatenating the start logits
