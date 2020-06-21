@@ -96,7 +96,8 @@ Fine-Tuning Model도 공개합니다.
     * best random seed: 9(Large) 7(Small)
 
 * **[AI NLP 대회 참여] BERT-Dep (single) (Virssist)**
-  * Colab Notebook https://colab.research.google.com/drive/1LpkZLmfsZz5LHCh0ivaR9TCr7CxOPYE-?usp=sharing
+  * Colab Notebook 
+    * https://colab.research.google.com/drive/1LpkZLmfsZz5LHCh0ivaR9TCr7CxOPYE-?usp=sharing
     * Dev set score: 78.68/88.59 (EM/F1) 
     * Test set score: 77.30/87.45 (EM/F1)
   * 답변의 start과 end사이에 의존관계가 있다는 아이디어를 이용하여 입력문자열에 의해 생성된 start와 마지막 히든 상태 H을 concatenating 시켜 end를 예측 하게 하였습니다. 아래 단락에는 저희가 참조한 논문의 링크와 소스코드의 링크를 첨부합니다.
